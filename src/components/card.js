@@ -1,3 +1,4 @@
+import axios from "axios";
 const Card = (article) => {
   // TASK 5
   // ---------------------
@@ -17,6 +18,33 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
+  const card = document.createElement('div');
+  const headline = document.createElement('div');
+  const author = document.createElement('div');
+  const imgContainer = document.createElement('div');
+  const authorImage = document.createElement('img');
+  const authorName = document.createElement('span');
+
+  card.classList.add('card');
+  headline.classList.add('headline');
+  author.classList.add('author');
+  imgContainer.classList.add('img-container');
+
+  headline.textContent = article.headline;
+  authorImage.src = article.authorPhoto;
+  authorName.textContent = `By ${article.authorName}`;
+
+  card.appendChild(headline);
+  card.appendChild(author);
+  author.appendChild(imgContainer);
+  author.appendChild(authorName);
+  imgContainer.appendChild(authorImage);
+
+  card.addEventListener('click', () => {
+    console.log(article.headline);
+  })
+
+  return card;
 }
 
 const cardAppender = (selector) => {
@@ -28,6 +56,36 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+
+const wrapper = document.querySelector(selector);
+axios.get(`http://localhost:5001/api/articles`)
+.then((response) => {
+  const bootstrap = response.data.articles.bootstrap;
+  bootstrap.forEach(elem => {
+    wrapper.appendChild(Card(elem));
+  })
+  const javascript = response.data.articles.javascript;
+  javascript.forEach(elem => {
+    wrapper.appendChild(Card(elem));
+  })
+  const technology = response.data.articles.technology;
+  technology.forEach(elem => {
+    wrapper.appendChild(Card(elem));
+  })
+  const jquery = response.data.articles.jquery;
+  jquery.forEach(elem => {
+    wrapper.appendChild(Card(elem));
+  })
+  const node = response.data.articles.node;
+  node.forEach(elem => {
+    wrapper.appendChild(Card(elem));
+  })
+})
+.catch((err) => {
+  console.log(err);
+})
 }
+
+
 
 export { Card, cardAppender }
